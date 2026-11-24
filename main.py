@@ -63,7 +63,6 @@ def fmt_rem(raw):
     s = html.escape(raw.strip()[:1200])
     s = re.sub(r'(\d[\d\s.,\-–]{2,}\d|\b\d{3,}\b)', r'<b>\1</b>', s)
     return re.sub(r'(ж[её]лт\w*|т[\s\-]*банк\w*|тбанк\w*|тиньк\w*)', r'<b>\1</b>', s, flags=re.IGNORECASE)
-
 def get_ads(c):
     if not c["amt"]: return []
     payload = {"userId": "", "tokenId": "USDT", "currencyId": "RUB", "payment": [], "side": "1", "size": "50", "page": "1", "amount": str(int(c["amt"])), "authMaker": False, "canTrade": False}
@@ -149,3 +148,12 @@ def radar():
                             bot.send_message(uid, "🚨 <b>РАДАР (Т-БАНК): НОВЫЙ КА!</b>\n\n" + card, reply_markup=m)
                 except: pass
 
+threading.Thread(target=radar, daemon=True).start()
+print("PRO-бот запущен!")
+while True:
+    try:
+        bot.polling(none_stop=True, interval=3, timeout=30)
+    except Exception as e:
+        print("Пауза 35 сек:", e)
+        time.sleep(35)
+        
