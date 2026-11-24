@@ -147,28 +147,3 @@ def radar():
                             c["seen"].add(ad_id); m = InlineKeyboardMarkup(); m.add(InlineKeyboardButton("🔗 Получить ссылку", callback_data=f"link_{ad_id}"))
                             bot.send_message(uid, "🚨 <b>РАДАР (Т-БАНК): НОВЫЙ КА!</b>\n\n" + card, reply_markup=m)
                 except: pass
-from flask import Flask, request
-import os
-
-WEBHOOK_URL = "https://bothost.ru"
-app = Flask(__name__)
-
-@app.route("/", methods=["POST"])
-def webhook():
-    json_str = request.get_data().decode("UTF-8")
-    update = telebot.types.Update.de_json(json_str)
-    bot.process_new_updates([update])
-    return "OK", 200
-
-@app.route("/", methods=["GET"])
-def index():
-    return "Bot is alive!", 200
-
-if __name__ == "__main__":
-    threading.Thread(target=radar, daemon=True).start()
-    bot.remove_webhook()
-    time.sleep(1)
-    bot.set_webhook(url=WEBHOOK_URL)
-    print("PRO-бот запущен через Webhook!")
-    port = int(os.environ.get("PORT", 3000))
-    app.run(host="0.0.0.0", port=port)
